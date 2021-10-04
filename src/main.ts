@@ -1,11 +1,10 @@
 import { NestFactory } from '@nestjs/core';
 import { Logger, ValidationPipe } from '@nestjs/common';
-
 import { AppModule } from './app.module';
 import { initSwagger } from './app.swagger';
 import { ConfigService } from '@nestjs/config';
 import { JWT_SECRET, SERVER_PORT } from './config/constants';
-import { setDefaultUser } from './config/default-user';
+import { generateTypeormConfigFile, setDefaultUser } from './scripts';
 
 
 async function bootstrap() {
@@ -15,6 +14,7 @@ async function bootstrap() {
   const port = parseInt(config.get<string>(SERVER_PORT), 10) || 3000;
   initSwagger(app);
   setDefaultUser(config);
+  generateTypeormConfigFile(config);
 
   app.useGlobalPipes(
     new ValidationPipe({
